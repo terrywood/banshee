@@ -24,7 +24,7 @@ public class HolidayService {
     @Cacheable
     public boolean isTradeDayTimeByMarket() {
         boolean ret = true;
-        if(1==1)return ret;
+        //if(1==1)return ret;
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         //int minute = cal.get(Calendar.MINUTE);
@@ -33,8 +33,6 @@ public class HolidayService {
             ret = false;
         } else if (hour < 9 || hour >= 15) {
             ret = false;
-    /*    } else if (hour == 9 && minute < 15) {
-            ret = false;*/
         } else {
             String date = sdf.format(cal.getTime());
             for (String str : holidays) {
