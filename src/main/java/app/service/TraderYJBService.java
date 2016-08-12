@@ -191,6 +191,9 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }else{
+                yjbAccount();
+                balance();
             }
         }else{
             log.info("less 10W ignore getDelegateID["+id+"]");
@@ -220,7 +223,6 @@ public class TraderYJBService implements TraderService, InitializingBean {
         }
         if (type.equals("1")) {
             requestId = "buystock_302";
-            Double balance;
             if ( yjbBalance > 0d) {
                 if((price * _amount) > yjbBalance){
                     Double a = ((yjbBalance / Double.valueOf(price)) / 100d);
@@ -233,7 +235,11 @@ public class TraderYJBService implements TraderService, InitializingBean {
             requestId = "sellstock_302";
             YJBAccount yjbAccount = yjbAccountMap.get(code);
             if (yjbAccount != null) {
-                amount = yjbAccount.getEnableAmount();
+                if(_amount>yjbAccount.getEnableAmount()){
+                    amount = yjbAccount.getEnableAmount();
+                }else{
+                    amount  =_amount;
+                }
                 yjbAccountMap.remove(code);
                 log.info("stock amount in yjb is " + amount);
             } else {

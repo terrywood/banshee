@@ -91,6 +91,8 @@ public class XueQiuTasks  implements  InitializingBean {
                         }
                         traderService.trading(market,obj.getId(),code,amount,obj.getPrice(),type,true);
                     }
+
+
                     xueService.saveXueSellRebalancing(xueSellRebalancing);
                 }
             } catch (Exception e) {
@@ -103,7 +105,6 @@ public class XueQiuTasks  implements  InitializingBean {
             }
             //long b = (System.currentTimeMillis()-a);
       } else {
-            log.info("now is not trade Day");
             xueService.findXueSellRebalancingByPK(1l);
             try {
                 Thread.sleep(1000 * 60 * 10);
