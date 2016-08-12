@@ -240,7 +240,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 }else{
                     amount  =_amount;
                 }
-                yjbAccountMap.remove(code);
+                //yjbAccountMap.remove(code);
                 log.info("stock amount in yjb is " + amount);
             } else {
                 log.info("cant not find stock in yjb");
