@@ -31,11 +31,15 @@ public class XueQiuTasks  implements  InitializingBean {
     @Autowired
     TraderService traderService;
 
-    Double totalBalance=200000d ; //20W
+    Double totalBalance=201000d ; //20W
 
     @Autowired
     HolidayService holidayService;
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        //System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
+        this.objectMapper = new ObjectMapper();
+    }
     @Scheduled(fixedDelay = 1)
     public  void init() {
         if (holidayService.isTradeDayTimeByMarket()) {
@@ -45,17 +49,20 @@ public class XueQiuTasks  implements  InitializingBean {
                // URL url = new URL("https://xueqiu.com/P/ZH914042");
                 URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
                 InputStream in = connection.getInputStream();
                 BufferedReader bd = new BufferedReader(new InputStreamReader(in));
                 //StringBuilder builder = new StringBuilder();
                 String text;
                 String cubeInfo = null;
                 while ((text = bd.readLine()) != null){
-                    if(text.startsWith("SNB.cubeInfo")){
-                        cubeInfo = text.substring(15);
+                    int index = text.indexOf("SNB.cubeInfo");
+                    if (index!=-1) {
+                        cubeInfo = text.substring(index+15);
                         break;
                     }
                 }
+               // System.out.println(cubeInfo);
                 XueReturnJson xueReturnJson =  objectMapper.readValue(cubeInfo, XueReturnJson.class);
                 XueSellRebalancing xueSellRebalancing = xueReturnJson.getSellRebalancing();
                 XueSellRebalancing entity =xueService.findXueSellRebalancingByPK(xueSellRebalancing.getId());
@@ -64,7 +71,7 @@ public class XueQiuTasks  implements  InitializingBean {
                     for(XueHistories obj : histories){
                         String symbol =obj.getStock_symbol();
                         String code = null,market =null,type=null;
-                        Integer amount =0;
+                        int amount ;
                         if(symbol.startsWith("SZ")){
                             market ="2";
                             code = org.apache.commons.lang3.StringUtils.removeStart(symbol,"SZ");
@@ -91,12 +98,11 @@ public class XueQiuTasks  implements  InitializingBean {
                         }
                         traderService.trading(market,obj.getId(),code,amount,obj.getPrice(),type,true);
                     }
-
-
                     xueService.saveXueSellRebalancing(xueSellRebalancing);
                 }
             } catch (Exception e) {
-                log.info(e.getMessage());
+                e.printStackTrace();
+                log.info(" error: "+e.getMessage());
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException ex) {
@@ -114,8 +120,5 @@ public class XueQiuTasks  implements  InitializingBean {
         }
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.objectMapper = new ObjectMapper();
-    }
+
 }

@@ -172,7 +172,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
 
     @Override
     public  void trading(String market, Long id, String code, Integer _amount, Double price, String type, Boolean fast) {
-        if( _amount > 0){
+      //  if( _amount > 0){
    /*         Func302 func302 =this.yjbAccountOrderMap.get(code);
             if(func302!=null){
                 log.info("cancel entrust and order new item :" + func302);
@@ -195,7 +195,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 yjbAccount();
                 balance();
             }
-        }else{
+ /*       }else{
             log.info("less 10W ignore getDelegateID["+id+"]");
             Trader trader = new Trader();
             trader.setType(type);
@@ -206,7 +206,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
             trader.setFast(fast);
             trader.setRemark("amount is zero by getDelegateID["+id+"]");
             this.traderRepository.save(trader);
-        }
+        }*/
 
 
     }

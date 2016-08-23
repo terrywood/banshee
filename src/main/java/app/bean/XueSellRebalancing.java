@@ -20,11 +20,12 @@ import java.util.List;
 public class XueSellRebalancing implements Serializable {
     @Id
     private Long  id;
+    /*
     private Long prev_bebalancing_id;
     private Long created_at;
     private String status;
     private Double cash;
-
+*/
     @JsonProperty(value = "rebalancing_histories")
     @OneToMany(mappedBy="rebalancing", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<XueHistories> xueHistories = new ArrayList<>();
