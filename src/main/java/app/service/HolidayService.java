@@ -31,7 +31,7 @@ public class HolidayService {
         int week = cal.get(Calendar.DAY_OF_WEEK);
         if (week == 1 || week == 7) {
             ret = false;
-        } else if (hour < 9 || hour > 15) {
+        } else if (hour < 9 || hour >= 15) {
             ret = false;
         } else {
             String date = sdf.format(cal.getTime());
