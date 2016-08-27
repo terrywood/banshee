@@ -1,6 +1,7 @@
 package app.task;
 
 import app.bean.*;
+import app.entity.SellRebalancing;
 import app.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class XueQiuTasks  implements  InitializingBean {
         //System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
         this.objectMapper = new ObjectMapper();
     }
-    @Scheduled(fixedDelay = 1)
+    @Scheduled(fixedDelay = 10000)
     public  void init() {
         if (holidayService.isTradeDayTimeByMarket()) {
             //long a = System.currentTimeMillis();
@@ -65,7 +66,9 @@ public class XueQiuTasks  implements  InitializingBean {
                // System.out.println(cubeInfo);
                 XueReturnJson xueReturnJson =  objectMapper.readValue(cubeInfo, XueReturnJson.class);
                 XueSellRebalancing xueSellRebalancing = xueReturnJson.getSellRebalancing();
-                XueSellRebalancing entity =xueService.findXueSellRebalancingByPK(xueSellRebalancing.getId());
+
+                System.out.println(xueSellRebalancing);
+                SellRebalancing entity =xueService.findXueSellRebalancingByPK(xueSellRebalancing.getId());
                 if(entity ==null){
                     List<XueHistories>  histories = xueSellRebalancing.getXueHistories();
                     for(XueHistories obj : histories){
@@ -98,7 +101,10 @@ public class XueQiuTasks  implements  InitializingBean {
                         }
                         traderService.trading(market,obj.getId(),code,amount,obj.getPrice(),type,true);
                     }
-                    xueService.saveXueSellRebalancing(xueSellRebalancing);
+
+                    SellRebalancing sellRebalancing =new SellRebalancing();
+                    sellRebalancing.setId(xueSellRebalancing.getId());
+                    xueService.saveXueSellRebalancing(sellRebalancing);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

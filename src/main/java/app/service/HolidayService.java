@@ -24,7 +24,7 @@ public class HolidayService {
     @Cacheable
     public boolean isTradeDayTimeByMarket() {
         boolean ret = true;
-        //if(1==1)return ret;
+        if(1==1)return ret;
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         //int minute = cal.get(Calendar.MINUTE);

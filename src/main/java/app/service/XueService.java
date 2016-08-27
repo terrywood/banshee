@@ -1,14 +1,12 @@
 package app.service;
 
-import app.bean.XueHistories;
-import app.bean.XueSellRebalancing;
+import app.entity.SellRebalancing;
+import app.repository.SellRebalancingRepository;
 import app.repository.XueHistoriesRepository;
-import app.repository.XueSellRebalancingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,14 +17,15 @@ public class XueService {
     private static final Logger log = LoggerFactory.getLogger(XueService.class);
 
     @Autowired
-    XueSellRebalancingRepository xueSellRebalancingRepository;
+    SellRebalancingRepository xueSellRebalancingRepository;
 
     @Autowired
     XueHistoriesRepository xueHistoriesRepository;
 
-    @Cacheable(value="xueSellRebalancingByPK",key = "#id" ,unless="#result == null")
-    public XueSellRebalancing findXueSellRebalancingByPK(Long id){
-        return  xueSellRebalancingRepository.findXueSellRebalancingByPK(id);
+    //@Cacheable(value="SellRebalancingByPK",key = "#id" ,unless="#result == null")
+
+    public SellRebalancing findXueSellRebalancingByPK(Long id){
+        return  xueSellRebalancingRepository.findSellRebalancingByPK(id);
     }
 
 
@@ -41,11 +40,8 @@ public class XueService {
     }
     */
 
-    @CacheEvict(value="xueSellRebalancingByPK", allEntries = true)
-    public void saveXueSellRebalancing(XueSellRebalancing entity){
-        for(XueHistories obj : entity.getXueHistories()){
-            obj.setRebalancing(entity);
-        }
+    @CacheEvict(value="SellRebalancingByPK", allEntries = true)
+    public void saveXueSellRebalancing(SellRebalancing entity){
         xueSellRebalancingRepository.save(entity);
     }
 
