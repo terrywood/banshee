@@ -41,13 +41,13 @@ public class XueQiuTasks  implements  InitializingBean {
         //System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
         this.objectMapper = new ObjectMapper();
     }
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 1)
     public  void init() {
         if (holidayService.isTradeDayTimeByMarket()) {
             //long a = System.currentTimeMillis();
             HttpURLConnection connection = null;
             try {
-               // URL url = new URL("https://xueqiu.com/P/ZH914042");
+                //URL url = new URL("https://xueqiu.com/P/ZH914042"); //wuzhiming
                 URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
@@ -66,46 +66,19 @@ public class XueQiuTasks  implements  InitializingBean {
                // System.out.println(cubeInfo);
                 XueReturnJson xueReturnJson =  objectMapper.readValue(cubeInfo, XueReturnJson.class);
                 XueSellRebalancing xueSellRebalancing = xueReturnJson.getSellRebalancing();
-
-                System.out.println(xueSellRebalancing);
+                //System.out.println(xueSellRebalancing);
                 SellRebalancing entity =xueService.findXueSellRebalancingByPK(xueSellRebalancing.getId());
                 if(entity ==null){
                     List<XueHistories>  histories = xueSellRebalancing.getXueHistories();
                     for(XueHistories obj : histories){
-                        String symbol =obj.getStock_symbol();
-                        String code = null,market =null,type=null;
-                        int amount ;
-                        if(symbol.startsWith("SZ")){
-                            market ="2";
-                            code = org.apache.commons.lang3.StringUtils.removeStart(symbol,"SZ");
-                        }else if(symbol.startsWith("SH")){
-                            market ="1";
-                            code = org.apache.commons.lang3.StringUtils.removeStart(symbol,"SH");
-                        }
-                        Double weight = obj.getWeight();
-                        Double preWeight = obj.getPrev_weight_adjusted()==null?0d:obj.getPrev_weight_adjusted();
-                        Double price = Double.valueOf(obj.getPrice());
-                        if(weight>preWeight){
-                            type="1";
-                            Double _amount =  ((totalBalance * (weight-preWeight))/100d) / price/100d;
-                            amount = _amount.intValue()*100;
-                        }else{
-                            type="2";
-                            if(weight==0d){
-                                Double _amount =  (totalBalance/price);
-                                amount = _amount.intValue(); //clear stock
-                            }else{
-                                Double _amount =  ((totalBalance * (preWeight - weight))/100d) / price/100d;
-                                amount = _amount.intValue()*100;
-                            }
-                        }
-                        traderService.trading(market,obj.getId(),code,amount,obj.getPrice(),type,true);
+                       // traderService.trading(market,obj.getId(),code,amount,obj.getPrice(),type,true);
+                        traderService.trading(obj);
                     }
-
                     SellRebalancing sellRebalancing =new SellRebalancing();
                     sellRebalancing.setId(xueSellRebalancing.getId());
                     xueService.saveXueSellRebalancing(sellRebalancing);
                 }
+                connection.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
                 log.info(" error: "+e.getMessage());

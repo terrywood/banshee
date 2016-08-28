@@ -15,8 +15,6 @@ import java.util.List;
 
 @Data
 @Entity
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SellRebalancing implements Serializable {
     @Id
     private Long  id;

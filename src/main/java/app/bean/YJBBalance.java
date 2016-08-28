@@ -23,8 +23,8 @@ public class YJBBalance implements Serializable{
     /*
     @JsonProperty(value = "market_value")
     public  Double marketValue;
-
+*/
     @JsonProperty(value = "asset_balance")
-    public  Double assetBalance;*/
+    public  Double assetBalance;
 
 }

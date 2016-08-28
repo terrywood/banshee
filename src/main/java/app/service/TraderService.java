@@ -1,5 +1,6 @@
 package app.service;
 
+import app.bean.XueHistories;
 import app.entity.Trader;
 
 /**
@@ -7,7 +8,9 @@ import app.entity.Trader;
  */
 public interface TraderService {
 
-
+   void trading(XueHistories obj);
    // Trader findOne(Long id);
     void trading(String market, Long id, String code, Integer amount, Double price, String type, Boolean fast);
+
+    
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class XueSellRebalancing implements Serializable {
-    @Id
     private Long  id;
     /*
     private Long prev_bebalancing_id;
@@ -24,7 +23,6 @@ public class XueSellRebalancing implements Serializable {
     private Double cash;
 */
     @JsonProperty(value = "rebalancing_histories")
-    @Transient
     private List<XueHistories> xueHistories ;
 
 }
