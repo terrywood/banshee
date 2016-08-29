@@ -80,7 +80,7 @@ public class XueQiuTasks  implements  InitializingBean {
                 }
                 connection.disconnect();
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 log.info(" error: "+e.getMessage());
                 try {
                     Thread.sleep(5000);
@@ -90,7 +90,7 @@ public class XueQiuTasks  implements  InitializingBean {
             }
             //long b = (System.currentTimeMillis()-a);
       } else {
-            xueService.findXueSellRebalancingByPK(1l);
+            xueService.findXueSellRebalancingByPK(21290092l);
             try {
                 Thread.sleep(1000 * 60 * 10);
             } catch (InterruptedException e) {
