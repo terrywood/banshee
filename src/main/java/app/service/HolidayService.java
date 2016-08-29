@@ -24,14 +24,14 @@ public class HolidayService {
     @Cacheable
     public boolean isTradeDayTimeByMarket() {
         boolean ret = true;
-        if(1==1)return ret;
+        //if(1==1)return ret;
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         //int minute = cal.get(Calendar.MINUTE);
         int week = cal.get(Calendar.DAY_OF_WEEK);
         if (week == 1 || week == 7) {
             ret = false;
-        } else if (hour < 9 || hour > 15) {
+        } else if (hour < 9 || hour >= 15) {
             ret = false;
         } else {
             String date = sdf.format(cal.getTime());

@@ -47,7 +47,7 @@ public class XueQiuTasks  implements  InitializingBean {
             //long a = System.currentTimeMillis();
             HttpURLConnection connection = null;
             try {
-                //URL url = new URL("https://xueqiu.com/P/ZH914042"); //wuzhiming
+               // URL url = new URL("https://xueqiu.com/P/ZH914042"); //wuzhiming
                 URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");

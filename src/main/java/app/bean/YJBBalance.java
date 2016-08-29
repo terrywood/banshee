@@ -18,12 +18,13 @@ public class YJBBalance implements Serializable{
 
     @JsonProperty(value = "current_balance")
     public  Double currentBalance;*/
+
     @JsonProperty(value = "enable_balance")
     public  Double enableBalance;
-    /*
+
     @JsonProperty(value = "market_value")
     public  Double marketValue;
-*/
+
     @JsonProperty(value = "asset_balance")
     public  Double assetBalance;
 
