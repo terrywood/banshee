@@ -53,17 +53,14 @@ public class XueQiuTasks  implements  InitializingBean {
                 connection.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
                 InputStream in = connection.getInputStream();
                 BufferedReader bd = new BufferedReader(new InputStreamReader(in));
-                //StringBuilder builder = new StringBuilder();
                 String text;
                 String cubeInfo = null;
                 while ((text = bd.readLine()) != null){
-                    int index = text.indexOf("SNB.cubeInfo");
-                    if (index!=-1) {
-                        cubeInfo = text.substring(index+15);
+                    if(text.startsWith("SNB.cubeInfo")){
+                        cubeInfo = text.substring(15);
                         break;
                     }
                 }
-               // System.out.println(cubeInfo);
                 XueReturnJson xueReturnJson =  objectMapper.readValue(cubeInfo, XueReturnJson.class);
                 XueSellRebalancing xueSellRebalancing = xueReturnJson.getSellRebalancing();
                 //System.out.println(xueSellRebalancing);

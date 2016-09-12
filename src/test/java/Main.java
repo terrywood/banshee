@@ -14,7 +14,9 @@ public class Main {
 
 		//String cubeInfo = FileUtils.readFileToString(new File("D:\\Terry\\workspace\\banshee\\src\\test\\data.json"),"UTF-8");
 		Main main = new Main();
-		long json =0;
+		main.testObject();
+
+	/*	long json =0;
 		long json2 =0;
 		//System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
 		for(int i = 0;i<50;i++){
@@ -24,7 +26,7 @@ public class Main {
 		}
          System.out.println("--------------------summary-------------------");
 		System.out.println(json);
-		System.out.println(json2);
+		System.out.println(json2);*/
 	}
 
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -44,12 +46,15 @@ public class Main {
 			String text;
 			String cubeInfo = null;
 			while ((text = bd.readLine()) != null) {
-				int index = text.indexOf("SNB.cubeInfo");
-				if (index>0) {
-					cubeInfo = text.substring(index+15);
+				//System.out.println("text:" + text);
+				//System.out.println("---------------------------------------------");
+				if(text.startsWith("SNB.cubeInfo")){
+					cubeInfo = text.substring(15);
 					break;
 				}
+
 			}
+
 			System.out.println(cubeInfo);
 		}catch (Exception e){
 			e.printStackTrace();
