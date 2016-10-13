@@ -14,6 +14,7 @@ public class Main {
 
 		//String cubeInfo = FileUtils.readFileToString(new File("D:\\Terry\\workspace\\banshee\\src\\test\\data.json"),"UTF-8");
 		Main main = new Main();
+		//main.testGJSON();
 		main.testObject();
 
 	/*	long json =0;
@@ -38,24 +39,26 @@ public class Main {
 			// URL url = new URL("https://xueqiu.com/P/ZH914042");
 			URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
+			connection.setRequestProperty("User-agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1");
 			InputStream in = connection.getInputStream();
 			BufferedReader bd = new BufferedReader(new InputStreamReader(in));
-
-			//StringBuilder builder = new StringBuilder();
 			String text;
 			String cubeInfo = null;
+
+
 			while ((text = bd.readLine()) != null) {
-				//System.out.println("text:" + text);
-				//System.out.println("---------------------------------------------");
-				if(text.startsWith("SNB.cubeInfo")){
-					cubeInfo = text.substring(15);
-					break;
+/*				System.out.println("text:" + text);
+				System.out.println("---------------------------------------------");*/
+
+				if(text.indexOf("902851")!=-1){
+					//cubeInfo = text.substring(15);
+					System.out.println(text);
+
 				}
 
 			}
 
-			System.out.println(cubeInfo);
+			//System.out.println(cubeInfo);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -81,10 +84,13 @@ public class Main {
 			String text;
 			String cubeInfo = null;
 			while ((text = bd.readLine()) != null) {
-				if (text.startsWith("SNB.cubeInfo")) {
+				System.out.println("text:" + text);
+				System.out.println("---------------------------------------------");
+
+			/*	if (text.startsWith("SNB.cubeInfo")) {
 					cubeInfo = text.substring(15);
 					break;
-				}
+				}*/
 			}
 			System.out.println(cubeInfo);
 		}catch (Exception e){

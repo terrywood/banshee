@@ -55,6 +55,7 @@ public class XueQiuTasks  implements  InitializingBean {
                 BufferedReader bd = new BufferedReader(new InputStreamReader(in));
                 String text;
                 String cubeInfo = null;
+
                 while ((text = bd.readLine()) != null){
                     if(text.startsWith("SNB.cubeInfo")){
                         cubeInfo = text.substring(15);

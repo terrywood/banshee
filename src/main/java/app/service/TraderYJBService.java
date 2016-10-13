@@ -66,12 +66,9 @@ public class TraderYJBService implements TraderService, InitializingBean {
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         this.cookieStore = new BasicCookieStore();
-        //guo jin
         this.entity = traderSessionService.findOne("40128457");
         //  login();
-        if (holidayService.isTradeDayTimeByMarket()) {
-            cornJob();
-        }
+         cornJob();
     }
 
     @Scheduled(cron = "0/30 * 9-16 * * MON-FRI")
@@ -118,7 +115,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
             if (weight == 0d) {
                 amount = yjbAccount.getEnableAmount();
                 yjbAccountMap.remove(code);
-                log.info("clear stock amount in yjb is " + amount);
+                //log.info("clear stock amount in yjb is " + amount);
             } else {
                 Double _amount = ((totalBalance * (preWeight - weight)) / 100d) / price / 100d;
                 amount = _amount.intValue() * 100;
@@ -126,7 +123,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
                     amount = yjbAccount.getEnableAmount();
                     yjbAccountMap.remove(code);
                 }
-                log.info("sell amount:" + amount);
+                //log.info("sell amount:" + amount);
             }
             requestId = "sellstock_302";
         }
@@ -186,6 +183,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 }
             }
         } catch (IOException e) {
+            isLogin = false;
             log.info(e.getMessage());
             //e.printStackTrace();
         }
@@ -201,9 +199,12 @@ public class TraderYJBService implements TraderService, InitializingBean {
             CloseableHttpResponse response3 = httpclient.execute(httpget3);
             HttpEntity entity = response3.getEntity();
             String str = IOUtils.toString(entity.getContent(), "UTF-8");
+            if(str.indexOf("-10002")>0){
+                this.isLogin=false;
+                return;
+            }
             str = (str.substring(260, str.length() - 15));
             YJBBalance yjbBalance = this.objectMapper.readValue(str, YJBBalance.class);
-            // this.yjbBalance = yjbBalance.getEnableBalance();
             this.totalBalance = yjbBalance.getAssetBalance();
             EntityUtils.consume(entity);
         } catch (Exception e) {
@@ -250,7 +251,6 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 CloseableHttpResponse response2 = httpclient.execute(login);
                 try {
                     HttpEntity entity = response2.getEntity();
-                    System.out.println("Login form get: " + response2.getStatusLine());
                     String result = IOUtils.toString(entity.getContent(), "UTF-8");
                     EntityUtils.consume(entity);
                     System.out.println("result:" + result);
