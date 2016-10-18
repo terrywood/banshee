@@ -59,6 +59,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
     private Boolean isLogin = false;
     BasicCookieStore cookieStore;
     TraderSession entity;
+    private int retryTimes =0;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -71,7 +72,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
          cornJob();
     }
 
-    @Scheduled(cron = "0/30 * 9-16 * * MON-FRI")
+    @Scheduled(cron = "0/20 * 9-16 * * MON-FRI")
     public void cornJob() {
         if (holidayService.isTradeDayTimeByMarket()) {
             if (isLogin) {
@@ -80,6 +81,8 @@ public class TraderYJBService implements TraderService, InitializingBean {
             } else {
                 login();
             }
+        }else {
+            isLogin = false;
         }
     }
 
@@ -167,6 +170,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
             String result = IOUtils.toString(entity.getContent(), "UTF-8");
             //log.info(result);
             if (result.indexOf("msg_no: '0'") == -1) {
+                log.info("yjbAccount get error");
                 isLogin = false;
             } else {
                 String str = "[" + (result.substring(346, result.length() - 14));
@@ -200,6 +204,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
             HttpEntity entity = response3.getEntity();
             String str = IOUtils.toString(entity.getContent(), "UTF-8");
             if(str.indexOf("-10002")>0){
+                log.info("balance get error");
                 this.isLogin=false;
                 return;
             }
@@ -253,18 +258,29 @@ public class TraderYJBService implements TraderService, InitializingBean {
                     HttpEntity entity = response2.getEntity();
                     String result = IOUtils.toString(entity.getContent(), "UTF-8");
                     EntityUtils.consume(entity);
-                    System.out.println("result:" + result);
-                    System.out.println("Post logon cookies:");
+                    log.info( result);
+                    if(result.indexOf("msg_no: '0'")>0){
+                        isLogin = true;
+                        retryTimes =0;
+                    }else{
+                        log.info("pls retry login-------------------------");
+                        isLogin = false;
+                        if(retryTimes<3){
+                            retryTimes++;
+                        }
+
+                    }
+                   /* log.info("Post logon cookies:");
                     List<Cookie> cookies = cookieStore.getCookies();
                     if (cookies.isEmpty()) {
-                        System.out.println("None");
+                        log.info("None");
                     } else {
                         isLogin = true;
                         for (int i = 0; i < cookies.size(); i++) {
                             //cookieStore.addCookie(cookies.get(i));
-                            System.out.println("- " + cookies.get(i).toString());
+                            log.info("- " + cookies.get(i).toString());
                         }
-                    }
+                    }*/
                 } finally {
                     response2.close();
                 }

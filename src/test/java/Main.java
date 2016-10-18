@@ -1,5 +1,14 @@
+import cn.skypark.code.MyCheckCodeTool;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,13 +18,14 @@ import java.net.URL;
 import java.text.ParseException;
 
 public class Main {
+	ObjectMapper objectMapper = new ObjectMapper();
 	public static void main(String[] args) throws ParseException, IOException {
 
 
 		//String cubeInfo = FileUtils.readFileToString(new File("D:\\Terry\\workspace\\banshee\\src\\test\\data.json"),"UTF-8");
 		Main main = new Main();
 		//main.testGJSON();
-		main.testObject();
+		main.testyonjinbao();
 
 	/*	long json =0;
 		long json2 =0;
@@ -30,7 +40,24 @@ public class Main {
 		System.out.println(json2);*/
 	}
 
-	ObjectMapper objectMapper = new ObjectMapper();
+
+	public void  testyonjinbao() throws IOException {
+		CloseableHttpClient httpclient = HttpClients.custom()
+				.build();
+		try {
+			HttpGet httpget3 = new HttpGet("https://jy.yongjinbao.com.cn/winner_gj/gjzq/user/extraCode.jsp");
+			CloseableHttpResponse response3 = httpclient.execute(httpget3);
+			HttpEntity entity3 = response3.getEntity();
+			BufferedImage image = ImageIO.read(entity3.getContent());
+			EntityUtils.consume(entity3);
+			MyCheckCodeTool tool = new MyCheckCodeTool("guojin");
+			String code = tool.getCheckCode_from_image(image);
+			System.out.println(code);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	public long  testObject() throws IOException {
 		long s = System.currentTimeMillis();
 
