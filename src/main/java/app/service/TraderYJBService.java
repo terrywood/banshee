@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -150,7 +151,11 @@ public class TraderYJBService implements TraderService, InitializingBean {
                     .build();
             CloseableHttpResponse response3 = httpclient.execute(trading);
             HttpEntity entity = response3.getEntity();
-            log.info(EntityUtils.toString(entity));
+            String result =EntityUtils.toString(entity);
+            if(result.indexOf("-10002")>0){
+                log.info(result);
+                this.isLogin=false;
+            }
             EntityUtils.consume(entity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +192,6 @@ public class TraderYJBService implements TraderService, InitializingBean {
                 }
             }
         } catch (IOException e) {
-            isLogin = false;
             log.info(e.getMessage());
             //e.printStackTrace();
         }
