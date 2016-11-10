@@ -1,61 +1,89 @@
-import cn.skypark.code.MyCheckCodeTool;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.BrowserCompatSpec;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 import java.text.ParseException;
 
 public class Main {
 	ObjectMapper objectMapper = new ObjectMapper();
-	public static void main(String[] args) throws ParseException, IOException {
-
-
-		//String cubeInfo = FileUtils.readFileToString(new File("D:\\Terry\\workspace\\banshee\\src\\test\\data.json"),"UTF-8");
+	String userAccount="qgllGMsw22qyyoGamwY9I4s0f3e7FEUnX23bol9EfW2t4pSncr1czGGl/cm/U3s8Ja1cNlVkS+WutaRvTgz9Tg==";
+	public static void main(String[] args) throws Exception {
 		Main main = new Main();
-		//main.testGJSON();
-		main.testyonjinbao();
-
-	/*	long json =0;
-		long json2 =0;
-		//System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
-		for(int i = 0;i<50;i++){
-			json2+= main.testGJSON();
-			json+= main.testObject();
-			System.out.println("------------------------");
-		}
-         System.out.println("--------------------summary-------------------");
-		System.out.println(json);
-		System.out.println(json2);*/
+		String token = main.testLogin();
+		main.testPosition(token);
 	}
-
-
-	public void  testyonjinbao() throws IOException {
-		CloseableHttpClient httpclient = HttpClients.custom()
+	public void  testPosition(String token) throws IOException {
+		//.out.println("token["+token+"]");
+		CloseableHttpClient httpclient = HttpClients.custom().setUserAgent("fbadp")
 				.build();
 		try {
-			HttpGet httpget3 = new HttpGet("https://jy.yongjinbao.com.cn/winner_gj/gjzq/user/extraCode.jsp");
-			CloseableHttpResponse response3 = httpclient.execute(httpget3);
-			HttpEntity entity3 = response3.getEntity();
-			BufferedImage image = ImageIO.read(entity3.getContent());
-			EntityUtils.consume(entity3);
-			MyCheckCodeTool tool = new MyCheckCodeTool("guojin");
-			String code = tool.getCheckCode_from_image(image);
-			System.out.println(code);
+			HttpUriRequest login = RequestBuilder.post()
+					.setUri(new URI("https://bdjr.gjzq.com.cn/stocktrade/GetPosition?from=android&clientVersion=3.4.3&vv=3.4.3&deviceId=865372028417613&mac=02:00:00:00:00:00"
+					+"&tradeToken="+token))
+					.addParameter("cuid", "5BC6A7A5EAAD48ABD766E2D595EF4CCA|316714820273568")
+					.addParameter("phone", "13660288080")
+					.addParameter("accountType", "1")
+					.addParameter("userAccount", userAccount)
+					.addParameter("brokerId", "1")
+					.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+					.build();
+			CloseableHttpResponse response2 = httpclient.execute(login);
+			HttpEntity entity = response2.getEntity();
+			String result = IOUtils.toString(entity.getContent(), "UTF-8");
+			System.out.println(result);
+			EntityUtils.consume(entity);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String  testLogin() throws IOException {
+
+		CloseableHttpClient httpclient = HttpClients.custom().setUserAgent("fbadp")
+				.build();
+		try {
+			HttpUriRequest login = RequestBuilder.post()
+					.setUri(new URI("https://bdjr.gjzq.com.cn/stocktrade/dologin?from=android&clientVersion=3.4.3&vv=3.4.3&deviceId=865372028417613&brokerId=1&accountType=1&mac=02:00:00:00:00:00"))
+					.addParameter("cuid", "5BC6A7A5EAAD48ABD766E2D595EF4CCA|316714820273568")
+					.addParameter("phone", "13660288080")
+					.addParameter("userPassword", "LUEjKWipgFuFSCjWVQz/nCMZ/DFclk5x/uacLolYmvx4n9MoAVaBRG8qcJB0813hvmJJQyMkBlzQhQKs8OCOKQ==")
+					.addParameter("isBind ", "0")
+					.addParameter("userAccount", userAccount)
+					//.setHeader("Referer", "https://jy.yongjinbao.com.cn/winner_gj/gjzq/")
+					.setHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8")
+					.build();
+			CloseableHttpResponse response2 = httpclient.execute(login);
+			HttpEntity entity = response2.getEntity();
+			String result = IOUtils.toString(entity.getContent(), "UTF-8");
+			System.out.println(result);
+			LoginResult object = objectMapper.readValue(result,LoginResult.class);
+			EntityUtils.consume(entity);
+			return object.getData().getLoginToken();
+			// URLDecoder.decode(object.getData().getLoginToken(),"UTF-8").trim();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public long  testObject() throws IOException {
@@ -71,14 +99,8 @@ public class Main {
 			BufferedReader bd = new BufferedReader(new InputStreamReader(in));
 			String text;
 			String cubeInfo = null;
-
-
 			while ((text = bd.readLine()) != null) {
-/*				System.out.println("text:" + text);
-				System.out.println("---------------------------------------------");*/
-
 				if(text.indexOf("902851")!=-1){
-					//cubeInfo = text.substring(15);
 					System.out.println(text);
 
 				}
@@ -96,39 +118,7 @@ public class Main {
 		System.out.println("ues Android:" + e);
 		return  e;
 	}
-	public long  testGJSON() throws IOException {
-		long s = System.currentTimeMillis();
-		HttpURLConnection connection = null;
-		try {
-			// URL url = new URL("https://xueqiu.com/P/ZH914042");
-			URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
-			connection = (HttpURLConnection) url.openConnection();
 
-			InputStream in = connection.getInputStream();
-			BufferedReader bd = new BufferedReader(new InputStreamReader(in));
-
-			//StringBuilder builder = new StringBuilder();
-			String text;
-			String cubeInfo = null;
-			while ((text = bd.readLine()) != null) {
-				System.out.println("text:" + text);
-				System.out.println("---------------------------------------------");
-
-			/*	if (text.startsWith("SNB.cubeInfo")) {
-					cubeInfo = text.substring(15);
-					break;
-				}*/
-			}
-			System.out.println(cubeInfo);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
-
-		long e = System.currentTimeMillis() -s;
-		System.out.println("ues Computer:" + e);
-		return  e;
-	}
 
 
 }
