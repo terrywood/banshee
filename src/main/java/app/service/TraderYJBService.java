@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("TraderService")
+/*@Service("TraderService")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@Lazy(value = false)
+@Lazy(value = false)*/
 public class TraderYJBService implements TraderService, InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(TraderYJBService.class);
     @Autowired
@@ -70,10 +70,10 @@ public class TraderYJBService implements TraderService, InitializingBean {
         this.cookieStore = new BasicCookieStore();
         this.entity = traderSessionService.findOne("40128457");
         //  login();
-         cornJob();
+        // cornJob();
     }
 
-    @Scheduled(cron = "0/20 * 9-16 * * MON-FRI")
+ /*   @Scheduled(cron = "0/20 * 9-16 * * MON-FRI")
     public void cornJob() {
         if (holidayService.isTradeDayTimeByMarket()) {
             if (isLogin) {
@@ -85,7 +85,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
         }else {
             isLogin = false;
         }
-    }
+    }*/
 
     @Override
     public void trading(XueHistories obj) {
@@ -164,7 +164,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
     }
 
 
-    public void yjbAccount() {
+ /*   public void yjbAccount() {
         try {
             CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore)
                     .setUserAgent(userAgent)
@@ -195,8 +195,8 @@ public class TraderYJBService implements TraderService, InitializingBean {
             log.info(e.getMessage());
             //e.printStackTrace();
         }
-    }
-
+    }*/
+/*
 
     public void balance() {
         try {
@@ -219,7 +219,7 @@ public class TraderYJBService implements TraderService, InitializingBean {
         } catch (Exception e) {
             log.info(e.getMessage());
         }
-    }
+    }*/
 
 
     public synchronized void login() {

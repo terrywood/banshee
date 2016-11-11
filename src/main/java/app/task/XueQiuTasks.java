@@ -41,7 +41,7 @@ public class XueQiuTasks  implements  InitializingBean {
         //System.setProperty("http.agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36");
         this.objectMapper = new ObjectMapper();
     }
-    @Scheduled(fixedDelay = 1)
+    //@Scheduled(fixedDelay = 1)
     public  void init() {
         if (holidayService.isTradeDayTimeByMarket()) {
             //long a = System.currentTimeMillis();

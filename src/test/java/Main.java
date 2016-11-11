@@ -1,27 +1,15 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.cookie.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.cookie.BrowserCompatSpec;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.text.ParseException;
+import java.net.URI;
 
 public class Main {
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -76,9 +64,7 @@ public class Main {
 			HttpEntity entity = response2.getEntity();
 			String result = IOUtils.toString(entity.getContent(), "UTF-8");
 			System.out.println(result);
-			LoginResult object = objectMapper.readValue(result,LoginResult.class);
-			EntityUtils.consume(entity);
-			return object.getData().getLoginToken();
+
 			// URLDecoder.decode(object.getData().getLoginToken(),"UTF-8").trim();
 		}catch (Exception e){
 			e.printStackTrace();
@@ -86,38 +72,6 @@ public class Main {
 		return null;
 	}
 
-	public long  testObject() throws IOException {
-		long s = System.currentTimeMillis();
-
-		HttpURLConnection connection = null;
-		try {
-			// URL url = new URL("https://xueqiu.com/P/ZH914042");
-			URL url = new URL("https://xueqiu.com/P/ZH902949"); // cheng lao shi
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty("User-agent","Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1");
-			InputStream in = connection.getInputStream();
-			BufferedReader bd = new BufferedReader(new InputStreamReader(in));
-			String text;
-			String cubeInfo = null;
-			while ((text = bd.readLine()) != null) {
-				if(text.indexOf("902851")!=-1){
-					System.out.println(text);
-
-				}
-
-			}
-
-			//System.out.println(cubeInfo);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
-
-
-		long e = System.currentTimeMillis() -s;
-		System.out.println("ues Android:" + e);
-		return  e;
-	}
 
 
 

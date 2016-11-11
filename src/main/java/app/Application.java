@@ -36,7 +36,7 @@ public class Application {
 
     @Bean(destroyMethod = "shutdown")
     public Executor taskScheduler() {
-        return Executors.newScheduledThreadPool(3);
+        return Executors.newScheduledThreadPool(5);
     }
 
     @Bean
